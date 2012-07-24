@@ -84,8 +84,14 @@ test "$COMMAND" = create && {
   exit 0;
 }
 
+test "$COMMAND" = ping && {
+  source _Ping.sh
+  exit 0;
+}
+
 echo "Usage:"
-echo "create a new host: cd <ScriptDir>; ./rootJobPlugin.sh create <NewHostName>"
-echo "reconfigure: cd <ScriptDir>; ./rootJobPlugin.sh reconfigure"
-echo "run jobs in $CMDDIR: cd <ScriptDir>; ./rootJobPlugin.sh cmd"
+echo "create a new host: rootJobPlugin.sh create <NewHostName>"
+echo "reconfigure: rootJobPlugin.sh reconfigure"
+echo "test configuration: rootJobPlugin.sh ping"
+echo "run jobs in $CMDDIR: rootJobPlugin.sh cmd"
 exit 3
