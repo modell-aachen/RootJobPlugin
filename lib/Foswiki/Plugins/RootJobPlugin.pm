@@ -18,7 +18,7 @@ use Foswiki::Plugins ();    # For the API version
 
 our $VERSION = '$Rev: 20120217 (2012-02-17) $';
 
-our $RELEASE = '0.2.0';
+our $RELEASE = '0.2.1';
 
 our $SHORTDESCRIPTION = 'Create virtual hosts using VirtualHostingContrib.';
 
@@ -116,7 +116,7 @@ sub WikiCommand {
 
 
    open my $wfile, ">", "$cmdDir/$filename" || return "Error while creating file $cmdDir/$filename, please check your configuration.";
-   print $wfile "Command '$command' issued by $username at $time." || return "Error while writing to $cmdDir/$command.";
+   print $wfile "Command '$command' issued by $username at $time.\n   * user=$username\n   * time=$time" || return "Error while writing to $cmdDir/$command.";
    foreach my $eachparam (keys %$param) {
      print $wfile "\n   * $eachparam=$param->{$eachparam}[0]";
    }
