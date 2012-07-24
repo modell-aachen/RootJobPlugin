@@ -58,7 +58,7 @@ cd $VHOST/$NEW
 test -e _template.cfg && {
   sed -e "s/%VIRTUALHOST%/$NEW/g" "_template.cfg" > "VirtualHost.cfg" && rm _template.cfg
 } || {
-  echo "No `pwd`/template.cfg found...not creating a VirtualHost.cfg"
+  echo "No `pwd`/_template.cfg found...not creating a VirtualHost.cfg"
 }
 
 echo "Creating new solr core for $NEW..."
