@@ -7,7 +7,7 @@ my $cores = '';
 
 @files = <*>;
 foreach my $file (@files) {
-  next if $file eq '_template' || $file eq 'conf' || $file =~ m/disabled/;
+  next if $file eq '^_' || $file eq 'conf' || $file =~ m/disabled/ || $file =~ m/backup/;
   next if not -d $file;
 
   $cores .= "    <core name=\"$file\" instanceDir=\"$file\" />\n";
