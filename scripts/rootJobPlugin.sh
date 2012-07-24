@@ -17,7 +17,7 @@ test -z "$SCRIPTDIR" && {
 
 ### Config ###
 test -e config.sh || {
-  echo "wikiCreator: Please set required options in config.sh (see config-example.sh for details)"
+  echo "Please set required options in config.sh (see config-example.sh for details)"
   exit 1
 }
 for i in config*.sh; do
