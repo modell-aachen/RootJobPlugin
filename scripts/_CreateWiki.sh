@@ -14,7 +14,7 @@ test -z "$WIKINAME" && {
 }
 
 cd $SCRIPTDIR
-./_createNewHost.sh $WIKINAME
+sh ./_createNewHost.sh $WIKINAME
 
 export TOUCHEDSOLRCFG=1
 export TOUCHEDIWATCHCFG=1
