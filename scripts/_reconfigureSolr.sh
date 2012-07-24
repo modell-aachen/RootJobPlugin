@@ -23,7 +23,7 @@ test -n "$USESOLR" && test -n "$TOUCHEDSOLRCFG" -o -n "$TOUCHEDCFG" && {
     mv solr.xml solr.xml.bck
   }
   cd $VHOST
-  $SCRIPTDIR/_reconfigureSolr.pl > $SOLR/solr.xml || {
+  perl -wT $SCRIPTDIR/_reconfigureSolr.pl > $SOLR/solr.xml || {
     echo "Could not create new Solr config"
     test -e $SOLR/solr.xml.bck && {
       echo "...restoring from solr.xml.bck"

@@ -14,7 +14,7 @@ export SCRIPTDIR
 
 echo "Creating VirtualHosting config for iWatch..."
 cd $VHOST
-$SCRIPTDIR/_createIWatchConfigVHC.pl >> $WRPTMPDIR/iwatchtmp.txt || {
+perl -wT $SCRIPTDIR/_createIWatchConfigVHC.pl >> $WRPTMPDIR/iwatchtmp.txt || {
   echo "Could not create new iWatch config"
   exit 1
 }
