@@ -1,0 +1,37 @@
+%META:TOPICPARENT{name="Plugins"}%
+<!--
+One line description, required for extensions repository catalog.
+   * Set SHORTDESCRIPTION = Create virtual hosts using VirtualHostingContrib.
+-->
+---+!! RootJobPlugin
+
+%SHORTDESCRIPTION%
+
+Standard controls in [[System.RootJobPluginControls]].
+
+---++ some of the many TODOs
+   * Interface
+   * Maketext
+   * Logging
+   * flock
+   * delete wikis
+   * overview over installed wikis
+   * check wikinames
+   * Apache
+   * Docu
+
+---++ Installation
+%$INSTALL_INSTRUCTIONS%
+
+---++ Info
+
+|  Author: | StephanOsthold |
+|  Copyright: | &copy; 2011, Foswiki Contributors |
+|  License: | GPL ([[http://www.gnu.org/copyleft/gpl.html][GNU General Public License]]) |
+|  Release: | %$RELEASE% |
+|  Version: | %$VERSION% |
+|  Change&nbsp;History: | <!-- versions below in reverse order -->&nbsp; |
+|  1.0.0 (XX Mmm 20XX): | Initial version |
+|  Home: | http://foswiki.org/Extensions/%TOPIC% |
+|  Support: | http://foswiki.org/Support/%TOPIC% |
+
