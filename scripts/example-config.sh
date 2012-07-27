@@ -12,7 +12,7 @@ export USESOLR="1"
 export SOLR=/var/www/solr/multicore	# Your Solr home for multicore installation
 export SOLRCMD="/etc/init.d/tomcat6"	# Command to start solr (ie. tomcat or jetty)
 export SOLROPTS=restart	# Options to solrs startup command
-export INDEXCMD="su www-data -c 'cd $CORE/tools; FOSWIKI_ROOT=$CORE ./virtualhosts-solrindex host=%VIRTUALHOST% --mode delta'"
+export INDEXCMD="su www-data -c 'cd $CORE/tools; FOSWIKI_ROOT=$CORE ./solrjob --host %VIRTUALHOST% --mode delta'"
 
 export USEIWATCH="1"
 export IWATCHCMD="/etc/init.d/iwatch"	# Command to start iwatch
