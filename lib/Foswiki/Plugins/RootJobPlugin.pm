@@ -40,74 +40,74 @@ sub initPlugin {
 
     # check for Plugins.pm versions
     if ( $Foswiki::Plugins::VERSION < 2.0 ) {
-      Foswiki::Func::writeWarning( 'Version mismatch between ',
-        __PACKAGE__, ' and Plugins.pm' );
-      return 0;
+        Foswiki::Func::writeWarning( 'Version mismatch between ',
+            __PACKAGE__, ' and Plugins.pm' );
+        return 0;
     }
 
     Foswiki::Func::registerRESTHandler( 'WikiCommand', \&WikiCommand );
 
 
-    # Plugin correctly initialized
-    return 1;
+# Plugin correctly initialized
+return 1;
 }
 
 sub WriteCommand {
-   my ( $command, $username, $template ) = @_;
+    my ( $command, $username, $template ) = @_;
 
-   $command =~ m#^([a-z0-9\._.\-]+)$# or return "The name of your wiki \"$command\" may only contain (lower case) letters and numbers."; # XXX
-   $command = $1;
+    $command =~ m#^([a-z0-9\._.\-]+)$# or return "The name of your wiki \"$command\" may only contain (lower case) letters and numbers."; # XXX
+    $command = $1;
 
-   my $cmdDir = $Foswiki::cfg{Extensions}{RootJobPlugin}{cmdDir} || return "Please set cmdDir in configure!";
+    my $cmdDir = $Foswiki::cfg{Extensions}{RootJobPlugin}{cmdDir} || return "Please set cmdDir in configure!";
 
-   # check if already issued
-   if (-e "$cmdDir/$command") {
-     return "The command has already been issued, it will be processed soon.";
-   }
+    # check if already issued
+    if (-e "$cmdDir/$command") {
+        return "The command has already been issued, it will be processed soon.";
+    }
 
-   my $time = localtime(time);
+    my $time = localtime(time);
 
-   open my $wfile, ">", "$cmdDir/$command" || return "Error while creating file in $cmdDir, please check your configuration.";
-   print $wfile "Request for $command issued by $username at $time.\n   * Command=$command" || return "Error while writing to $cmdDir/$command.";
-   print $wfile "\n   * Template=$template" if ($template);
-   close $wfile || return "Error while closing $cmdDir/$command.";
+    open my $wfile, ">", "$cmdDir/$command" || return "Error while creating file in $cmdDir, please check your configuration.";
+    print $wfile "Request for $command issued by $username at $time.\n   * Command=$command" || return "Error while writing to $cmdDir/$command.";
+    print $wfile "\n   * Template=$template" if ($template);
+    close $wfile || return "Error while closing $cmdDir/$command.";
 
-   return "Command $command issued.";
+    return "Command $command issued.";
 }
 
 sub WikiCommand {
-   my ( $session, $subject, $verb, $response ) = @_;
+    my ( $session, $subject, $verb, $response ) = @_;
 
-   # Username and rights
-   if (Foswiki::Func::isGuest()) {
-	   return "This is not for guests!";
-   }
-   my $username = Foswiki::Func::getWikiName( undef );
-   my $permWeb = $Foswiki::cfg{Extensions}{RootJobPlugin}{PermissionWeb} || 'System';
-   my $permTopic = $Foswiki::cfg{Extensions}{RootJobPlugin}{PermissionTopic} || 'RootJobPlugin';
-   if (not Foswiki::Func::checkAccessPermission('CHANGE', $username, '', $permTopic, $permWeb, undef )) {
-	return "$username, you are not allowed to create wikis! Write permission for $permWeb/$permTopic required!";
-   }
+    # Username and rights
+    if (Foswiki::Func::isGuest()) {
+        return "This is not for guests!";
+    }
+    my $username = Foswiki::Func::getWikiName( undef );
+    my $permWeb = $Foswiki::cfg{Extensions}{RootJobPlugin}{PermissionWeb} || 'System';
+    my $permTopic = $Foswiki::cfg{Extensions}{RootJobPlugin}{PermissionTopic} || 'RootJobPlugin';
+    if (not Foswiki::Func::checkAccessPermission('CHANGE', $username, '', $permTopic, $permWeb, undef )) {
+        return "$username, you are not allowed to create wikis! Write permission for $permWeb/$permTopic required!";
+    }
 
-   # extract command
-   my $param = $session->{request}->{param};
+    # extract command
+    my $param = $session->{request}->{param};
 
-   my $command = $param->{command}[0];
-   if(!$command) {
-     return "Illegal rest-call, no command found!";
-   }
-   my $unique = $param->{wname}[0]; # XXX
-   if(!$unique) {
-     return "No unique!";
-   }
+    my $command = $param->{command}[0];
+    if(!$command) {
+        return "Illegal rest-call, no command found!";
+    }
+    my $unique = $param->{wname}[0]; # XXX
+    if(!$unique) {
+        return "No unique!";
+    }
 
-   my $time = localtime(time);
+    my $time = localtime(time);
 
-   my $filename = $command."_$unique.cmd";
-   $filename =~ m#^([a-zA-Z0-9\._.\-]+)$# or return "The command \"$command\" ($filename) may only contain letters and numbers."; # XXX
-   $filename = $1;
+    my $filename = $command."_$unique.cmd";
+    $filename =~ m#^([a-zA-Z0-9\._.\-]+)$# or return "The command \"$command\" ($filename) may only contain letters and numbers."; # XXX
+    $filename = $1;
 
-   my $cmdDir = $Foswiki::cfg{Extensions}{RootJobPlugin}{cmdDir} || return "Please set cmdDir in configure!";
+    my $cmdDir = $Foswiki::cfg{Extensions}{RootJobPlugin}{cmdDir} || return "Please set cmdDir in configure!";
 
 #   # check if already issued
 #   if (-e "$cmdDir/$filename") {
@@ -115,13 +115,13 @@ sub WikiCommand {
 #   }
 
 
-   open my $wfile, ">", "$cmdDir/$filename" || return "Error while creating file $cmdDir/$filename, please check your configuration.";
-   print $wfile "Command '$command' issued by $username at $time.\n   * user=$username\n   * time=$time" || return "Error while writing to $cmdDir/$command.";
-   foreach my $eachparam (keys %$param) {
-     print $wfile "\n   * $eachparam=$param->{$eachparam}[0]";
-   }
+    open my $wfile, ">", "$cmdDir/$filename" || return "Error while creating file $cmdDir/$filename, please check your configuration.";
+    print $wfile "Command '$command' issued by $username at $time.\n   * user=$username\n   * time=$time" || return "Error while writing to $cmdDir/$command.";
+    foreach my $eachparam (keys %$param) {
+        print $wfile "\n   * $eachparam=$param->{$eachparam}[0]";
+    }
 
-   return "Command $command issued ($filename)"; 
+    return "Command $command issued ($filename)"; 
 }
 
 1;
