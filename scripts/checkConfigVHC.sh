@@ -2,6 +2,10 @@ test -z "$VHOST" && {
   echo "Please specify in configVHC.sh where VirtualHosts reside (VHOST)"
   exit 1
 }
+test -z "$DISABLED" && {
+  echo "Please specify in configVHC.sh where disabled hosts reside (DISABLED)"
+  exit 1
+}
 test "$USESOLR" = on && {
   test -d "$SOLR" || {
     echo "Solr home not found in $SOLR"
