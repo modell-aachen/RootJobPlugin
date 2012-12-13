@@ -1,5 +1,8 @@
 # ---+ Extensions
 # ---++ RootJobPlugin
+# **BOOL**
+# Whether to prevent edits to System for anyone but AdminUser.
+$Foswiki::cfg{Extensions}{RootJobPlugin}{SystemLockdown} = 0;
 # **STRING**
 # User needs write-permissions to this topic if he wants to administrate the wiki.
 $Foswiki::cfg{Extensions}{RootJobPlugin}{PermissionTopic} = 'RootJobPlugin';

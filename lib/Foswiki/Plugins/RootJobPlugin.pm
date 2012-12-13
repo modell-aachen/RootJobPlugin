@@ -124,6 +124,30 @@ sub WikiCommand {
     return "Command $command issued ($filename)"; 
 }
 
+# Lockdown: restrict edits of System web to AdminUser
+my $handler = sub {
+	return if !$Foswiki::cfg{Extensions}{RootJobPlugin}{SystemLockdown};
+	my $session = $Foswiki::Plugins::SESSION;
+
+	my ($web, $topic);
+	# Upload?
+	if (ref $_[0]) {
+		$web = $_[1]->web;
+		$topic = $_[1]->topic;
+	} else {
+		($topic, $web) = @_[1..2];
+	}
+	return if $web ne $Foswiki::cfg{SystemWebName};
+	return if $session->{user} =~ /^(admin|AdminUser|BaseUserMapping_333)$/;
+
+	$session->{response} = Foswiki::Response->new;
+	throw Foswiki::AccessControlException( 'CHANGE', $session->{user},
+		$web, $topic, $session->i18n->maketext('access denied on web') );
+};
+sub beforeEditHandler { &$handler; }
+sub beforeSaveHandler { &$handler; }
+sub beforeUploadHandler { &$handler; }
+
 1;
 
 __END__
