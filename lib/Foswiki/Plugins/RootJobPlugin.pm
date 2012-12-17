@@ -138,7 +138,7 @@ my $handler = sub {
 		($topic, $web) = @_[1..2];
 	}
 	return if $web ne $Foswiki::cfg{SystemWebName};
-	return if $session->{user} =~ /^(admin|AdminUser|BaseUserMapping_333)$/;
+	return if $session->{user} =~ /^($Foswiki::cfg{AdminUserLogin}|$Foswiki::cfg{AdminUserWikiName}|BaseUserMapping_333)$/;
 
 	$session->{response} = Foswiki::Response->new;
 	throw Foswiki::AccessControlException( 'CHANGE', $session->{user},
