@@ -1,5 +1,15 @@
+test "$USEVHC" = "1" || return
+
 test -z "$VHOST" && {
   echo "Please specify in configVHC.sh where VirtualHosts reside (VHOST)"
+  exit 1
+}
+test -d "$VHOST" || {
+  echo "Virtual hosts directory not found in $VHOST"
+  exit 1
+}
+test -z "$VHOSTREGEX" && {
+  echo "Please specify in configVHC.sh the regex for VirtualHosts (VHOSTREGEX)"
   exit 1
 }
 test -z "$DISABLED" && {
@@ -11,16 +21,16 @@ test "$USESOLR" = on && {
     echo "Solr home not found in $SOLR"
     exit 1
   }
-  test -d $SOLR/_template || {
+  test -d "$SOLR/_template" || {
     echo "No $SOLR/_template found to create new Solr index"
     exit 1
   }
-  test -e $SCRIPTDIR/createSolrConfig.pl || {
+  test -e "$SCRIPTDIR/createSolrConfig.pl" || {
     echo "Could not find script createSolrConfig.pl to create Solr configuration"
     exit 1
   }
 }
-test -e $CORE/tools/virtualhosts-create.sh || {
+test -e "$CORE/tools/virtualhosts-create.sh" || {
   echo "Could not find virtualhosts-create.sh in $CORE/tools, is VirtualHostingContrib installed?"
   exit 1
 }

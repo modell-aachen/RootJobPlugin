@@ -23,6 +23,7 @@ foreach my $file (@files) {
 
   
   $host =~ s#%VIRTUALHOST%#$file#g;
+  $host =~ s#%MODE%#delta#g;
   $hosts .= $host;
 }
 

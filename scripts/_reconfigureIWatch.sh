@@ -4,8 +4,10 @@
 #    SOLR: path to solr home
 #    SCRIPTDIR: directory where scripts reside
 
+test "$USEIWATCH" = "1" -a "$USEVHC" = "1" || exit 0;
+
 test -z "$RJPCONFIGCHECKED" -o -z "$RJPVHCCONFIGCHECKED" && {
-  echo "Config not verified"
+  echo "Config not verified ($BASH_SOURCE)"
   exit 1
 }
 
@@ -15,13 +17,13 @@ test -n "$USEIWATCH" && test -n "$TOUCHEDIWATCHCFG" -o -n "$TOUCHEDCFG" && {
 
   # Create header
   test -z "$WRPTMPDIR" && WRPTMPDIR="$SCRIPTDIR"
-  cd $SCRIPTDIR
+  cd "$SCRIPTDIR"
   test -e iwatchheader.txt || {
     echo "iwatchheader.txt not found, could not create iwatch configuration."
     exit 1
   }
   # I copy the header so I don't have to put up with ACLs and ownership etc.
-  cp -p iwatchheader.txt $WRPTMPDIR/iwatchtmp.txt || {
+  cp -p iwatchheader.txt "$WRPTMPDIR/iwatchtmp.txt" || {
     echo "Could not create temporary file $WRPTMPDIR/iwatchtmp.txt."
     exit 1
   }
@@ -32,13 +34,13 @@ test -n "$USEIWATCH" && test -n "$TOUCHEDIWATCHCFG" -o -n "$TOUCHEDCFG" && {
 
   # Create contents
   for i in _createIWatchConfig*.sh; do
-    test -e $i && sh $i
+    test -e "$i" && bash "$i"
   done
   # config for this script
   echo "  <watchlist>
   <title>WikiRootPlugin</title>
   <contactpoint email=\"$WRPEMAIL\" name=\"Administrator\" />
-  <path type=\"single\" events=\"create\" alert=\"off\" syslog=\"off\" exec=\"cd $SCRIPTDIR; ./rootJobPlugin.sh cmd >> $ROOTJOBLOG/cmd.log\">$CMDDIR</path>
+  <path type=\"single\" events=\"create\" alert=\"off\" syslog=\"off\" exec=\"cd $SCRIPTDIR; bash ./rootJobPlugin.sh cmd >> $ROOTJOBLOG/cmd.log\">$CMDDIR</path>
   </watchlist>" >> $WRPTMPDIR/iwatchtmp.txt
 
 #    test -e $IWATCHCFG.bck && {
@@ -47,11 +49,11 @@ test -n "$USEIWATCH" && test -n "$TOUCHEDIWATCHCFG" -o -n "$TOUCHEDCFG" && {
 #    }
 
   # Create footer
-  echo "</config>" >> $WRPTMPDIR/iwatchtmp.txt
+  echo "</config>" >> "$WRPTMPDIR/iwatchtmp.txt"
 
   # Install new config
-  test -e $IWATCHCFG && {
-    mv $IWATCHCFG $IWATCHCFG.bck
+  test -e "$IWATCHCFG" && {
+    mv "$IWATCHCFG" "$IWATCHCFG.bck"
   }
-  mv $WRPTMPDIR/iwatchtmp.txt $IWATCHCFG
+  mv "$WRPTMPDIR/iwatchtmp.txt" "$IWATCHCFG"
 }

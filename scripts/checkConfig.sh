@@ -6,10 +6,6 @@ test -d $CORE || {
   echo "Core not found in $CORE"
   exit 1
 }
-test -d $VHOST || {
-  echo "Virtual hosts directory not found in $VHOST"
-  exit 1
-}
 test -e "$SCRIPTDIR/config.sh" || {
   echo "Could'nt find config.sh in script directory $SCRIPTDIR."
   exit 1
@@ -32,6 +28,10 @@ test -z "$WRPEMAIL" && {
 }
 test -z "$WRPTMPDIR" && {
   WRPTMPDIR="$SCRIPTDIR"
+}
+test -d "$WRPTMPDIR" || {
+  echo "Temporary directory $WRPTMPDIR does not exist (WRPTMPDIR)"
+  exit 1;
 }
 
 test -z "$USESOLR" && {

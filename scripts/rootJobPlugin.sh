@@ -5,7 +5,7 @@
 # Set the configuration below to your environment 
 
 test -n "$SCRIPTDIR" && {
-  cd $SCRIPTDIR || {
+  cd "$SCRIPTDIR" || {
     echo "could not enter script dir $SCRIPTDIR"
     exit 1
   }
@@ -20,33 +20,67 @@ test -e config.sh || {
   echo "Please set required options in config.sh (see config-example.sh for details)"
   exit 1
 }
-for i in config*.sh; do
-  source $i
+source config.sh
+for i in config_*.sh; do
+  source "$SCRIPTDIR/$i"
 done
 for i in checkConfig*.sh; do
-  source $i
+  source "$SCRIPTDIR/$i"
 done
 
 test -z "$RJPCONFIGCHECKED" && {
-  echo "Config not verified"
+  echo "Config not verified ($BASH_SOURCE)"
   exit 1
 }
 ### /Config ###
 
 function restartServices {
   for eachfile in _restart*.sh; do
-    test -e $eachfile && sh $eachfile
+    test -e "$eachfile" && bash "$eachfile"
   done;
 }
 
 function reconfigureServices {
   for eachfile in _reconfigure*.sh; do
-    test -e $eachfile && sh $eachfile
+    test -e "$eachfile" && bash "$eachfile"
   done;
+}
+
+function importPARAM {
+  local toimport=$1;
+  local allowed=$2;
+
+  test -z "$toimport" && {
+    echo "importPARAM called without parameter!";
+    return;
+  }
+  test -z "$allowed" && {
+    echo "importPARAM called without whitelist!";
+    return;
+  }
+  test -z $FILE && {
+    echo "no file defined for importPARAM!";
+    export $toimport="";
+    return;
+  }
+  export $toimport="`sed -n \"s/^   \* $toimport=\($allowed\).*/\1/p\" <$CMDDIR/$FILE`"
 }
 
 ### Main ###
 COMMAND=$1
+
+test "$COMMAND" = createApacheCoreConfig && {
+  CORENAME=$2
+  test "$USEAPACHEVHC" = "1" || { echo "You are not configured to use apache?!?"; exit 1; }
+  test -z "$RJPCONFIGCHECKED" -o -z "$RJPVHCCONFIGCHECKED" -o -z "$APACHEVHCCONFIGCHECKED" && {
+    echo "Config not checked ($BASH_SOURCE)!"
+    exit 1
+  }
+  test -z "$CORENAME" && { echo "Please specify core-name as second parameter!"; exit 1; }
+  test -d "$VHOST/$CORENAME" || { echo "Core does not exist in $VHOST/$CORENAME!"; exit 1; }
+  bash "$SCRIPTDIR/_CreateWiki_apacheVHC.sh" $CORENAME
+  exit 0
+}
 
 test "$COMMAND" = reconfigure && {
   export TOUCHEDCFG=1
@@ -57,14 +91,14 @@ test "$COMMAND" = reconfigure && {
 }
 
 test "$COMMAND" = cmd && {
-  cd $CMDDIR || {
+  cd "$CMDDIR" || {
     echo "Could not change into $CMDDIR"
     exit 1;
   }
   test -z "`ls -A *.cmd 2> /dev/null`" && exit 0 # do nothing if empty directory, I'm open for suggestions for doing this a bit more elegantly
   for eachfile in *.cmd; do
-    source $SCRIPTDIR/_processFile.sh $eachfile;
-  done;
+    source "$SCRIPTDIR/_processFile.sh" "$eachfile"
+  done
   reconfigureServices
   restartServices
   echo "Finished with requests."
@@ -77,7 +111,11 @@ test "$COMMAND" = create && {
     echo "Please specify wiki name."
     exit 1;
   }
-  ./_createNewHost.sh $NEW
+  test -n `echo $NEW && sed -e "s#^$VHOSTREGEX$##g"` && {
+    echo "Wiki name does not match VHOSTREGEX: $VHOSTREGEX"
+    exit 1;
+  }
+  bash ./_createNewHost.sh $NEW
   reconfigureServices
   restartServices
   echo "Finished creating $NEW"
@@ -85,7 +123,7 @@ test "$COMMAND" = create && {
 }
 
 test "$COMMAND" = ping && {
-  source _Ping.sh
+  source "$SCRIPTDIR/_Ping.sh"
   exit 0;
 }
 

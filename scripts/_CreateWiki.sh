@@ -1,20 +1,22 @@
 test -z "$RJPCONFIGCHECKED" -o -z "$RJPVHCCONFIGCHECKED" && {
-  echo "Config not verified"
+  echo "Config not verified ($BASH_SOURCE)"
   exit 1
 }
 
 FILE=$1
 
-WIKINAME=`sed -n 's/^   \* wname=\([a-zA-Z_-]*\)/\1/p' <$CMDDIR/$FILE`
-export VHTEMPLATE=`sed -n 's/^   \* template=\([a-zA-Z_-]*\)/\1/p' <$CMDDIR/$FILE`
+importPARAM wname "$VHOSTREGEX"
+importPARAM VHTEMPLATE "$VHOSTREGEX"
 
-test -z "$WIKINAME" && {
+test -z "$wname" && {
   echo "Could not find wikiname in command, please specify 'wname'."
   return
 }
 
-cd $SCRIPTDIR
-sh ./_createNewHost.sh $WIKINAME
+cd "$SCRIPTDIR"
+bash ./_createNewHost.sh "$wname"
+
+cd "$SCRIPTDIR" && find . -name _CreateWiki_\*.sh -exec bash {} "$wname" \;
 
 export TOUCHEDSOLRCFG=1
 export TOUCHEDIWATCHCFG=1

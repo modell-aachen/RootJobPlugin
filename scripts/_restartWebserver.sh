@@ -1,9 +1,9 @@
-test -z "$RJPCONFIGCHECKED" -o -z "$RJPVHCCONFIGCHECKED" && {
-  echo "Config not verified"
+test -z "$RJPCONFIGCHECKED" && {
+  echo "Config not verified ($BASH_SOURCE)"
   exit 1
 }
 
-test -n "$USESOLR" && test -n "$TOUCHEDSOLRCFG" -o -n "$TOUCHEDCFG" && {
+test -n "$TOUCHEDWEBCFG" -o -n "$TOUCHEDCFG" && {
   echo "Restarting webserver..."
-  sh $WEBCMD $WEBOPTS
+  sh "$WEBCMD" $WEBOPTS
 }

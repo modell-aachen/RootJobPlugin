@@ -3,7 +3,4 @@ test -z "$RJPCONFIGCHECKED" && {
   exit 1
 }
 
-importPARAM message ".*";
-test -n "$message" && echo "message: $message"
-
-echo "Pong"
+export TOUCHEDCFG=1

@@ -12,3 +12,7 @@ $Foswiki::cfg{Extensions}{RootJobPlugin}{PermissionWeb} = 'System';
 # **PATH**
 # Where this plugin will store its commands.
 $Foswiki::cfg{Extensions}{RootJobPlugin}{cmdDir} = '';
+# **STRING**
+# Enter the name of the topics that describe allowed jobs.
+# Comma sepparated list.
+$Foswiki::cfg{Extensions}{RootJobPlugin}{Jobs} = '';
