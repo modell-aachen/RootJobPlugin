@@ -18,9 +18,9 @@ use Foswiki::Plugins ();    # For the API version
 
 our $VERSION = '$Rev: 20120217 (2012-02-17) $';
 
-our $RELEASE = '0.2.2';
+our $RELEASE = '1.0.0';
 
-our $SHORTDESCRIPTION = 'Create virtual hosts using VirtualHostingContrib.';
+our $SHORTDESCRIPTION = 'Manage your server with a frontend in your wiki.';
 
 our $NO_PREFS_IN_TOPIC = 1;
 
