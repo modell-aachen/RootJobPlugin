@@ -71,7 +71,7 @@ COMMAND=$1
 
 test "$COMMAND" = createApacheCoreConfig && {
   CORENAME=$2
-  test "$USEAPACHEVHC" = "1" || { echo "You are not configured to use apache?!?"; exit 1; }
+  test "$USEAPACHEVHC" = "1" || { echo "You are not configured to use apache?!? (USEAPACHEVHC in config.sh)"; exit 1; }
   test -z "$RJPCONFIGCHECKED" -o -z "$RJPVHCCONFIGCHECKED" -o -z "$APACHEVHCCONFIGCHECKED" && {
     echo "Config not checked ($BASH_SOURCE)!"
     exit 1
