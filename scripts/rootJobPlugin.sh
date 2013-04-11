@@ -111,7 +111,7 @@ test "$COMMAND" = create && {
     echo "Please specify wiki name."
     exit 1;
   }
-  test -n `echo $NEW && sed -e "s#^$VHOSTREGEX$##g"` && {
+  test -n "`echo $NEW | sed -e "s/^$VHOSTREGEX\$//g"`" && {
     echo "Wiki name does not match VHOSTREGEX: $VHOSTREGEX"
     exit 1;
   }
