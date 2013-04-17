@@ -5,7 +5,7 @@ test -z "$RJPCONFIGCHECKED" -o -z "$RJPVHCCONFIGCHECKED" && {
 
 FILE=$1
 
-importPARAM wname "$VHOSTREGEX"
+importPARAM wname "$VHOSTREGEX\$"
 importPARAM VHTEMPLATE "$VHOSTREGEX"
 
 test -z "$wname" && {
