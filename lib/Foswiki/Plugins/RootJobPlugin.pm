@@ -171,7 +171,7 @@ sub WikiCommand {
         return "The command has already been issued, please try again.";
     }
     
-    open my $wfile, ">", "$cmdDir/$filename" || return "Error while creating file $cmdDir/$filename, please check your configuration.";
+    open (my $wfile, ">", "$cmdDir/$filename") || return "Error while creating file $cmdDir/$filename, please check your configuration.";
     print $wfile "Command '$command' issued by $username at $localtime.\n   * command=$command\n   * user=$username\n   * localtime=$localtime\n   * time=$time$out\n" || return "Error while writing to $cmdDir/$command.";
     return "Command $command issued ($filename)"; 
 }
