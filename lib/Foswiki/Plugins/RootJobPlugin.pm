@@ -50,29 +50,6 @@ sub initPlugin {
     return 1;
 }
 
-sub WriteCommand {
-    my ( $command, $username, $template ) = @_;
-
-    $command =~ m#^([a-z0-9\._.\-]+)$# or return "The name of your wiki \"$command\" may only contain (lower case) letters and numbers."; # XXX
-    $command = $1;
-
-    my $cmdDir = $Foswiki::cfg{Extensions}{RootJobPlugin}{cmdDir} || return "Please set cmdDir in configure!";
-
-    # check if already issued
-    if (-e "$cmdDir/$command") {
-        return "The command has already been issued, it will be processed soon.";
-    }
-
-    my $time = localtime(time);
-
-    open my $wfile, ">", "$cmdDir/$command" || return "Error while creating file in $cmdDir, please check your configuration.";
-    print $wfile "Request for $command issued by $username at $time.\n   * Command=$command" || return "Error while writing to $cmdDir/$command.";
-    print $wfile "\n   * Template=$template" if ($template);
-    close $wfile || return "Error while closing $cmdDir/$command.";
-
-    return "Command $command issued.";
-}
-
 sub WikiCommand {
     my ( $session, $subject, $verb, $response ) = @_;
 
