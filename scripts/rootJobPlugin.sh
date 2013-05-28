@@ -20,7 +20,7 @@ test -e config.sh || {
   echo "Please set required options in config.sh (see config-example.sh for details)"
   exit 1
 }
-source config.sh
+source $SCRIPTDIR/config.sh
 for i in config_*.sh; do
   source "$SCRIPTDIR/$i"
 done
