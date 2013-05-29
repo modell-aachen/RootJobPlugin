@@ -13,5 +13,9 @@ test -d "$APACHEHOSTS" || {
   echo "Virtual hosts config-directory not found in $APACHEHOSTS"
   exit 1
 }
+test -e "$SCRIPTDIR/apacheVHC.template" || {
+  echo "Template for apache-configuration not found: $SCRIPTDIR/apacheVHC.template"
+  exit 1
+}
 
 export APACHEVHCCONFIGCHECKED=1
