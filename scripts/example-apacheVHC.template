@@ -1,0 +1,206 @@
+# For Foswiki version 1.1
+
+UseCanonicalName Off
+
+<VirtualHost *>
+    ServerAdmin webmaster@%VIRTUALHOST%
+    DocumentRoot %VHOST%/%VIRTUALHOST%
+    ServerName %VIRTUALHOST%
+    ServerAlias www.%VIRTUALHOST%
+
+# The Alias defines a url that points to the root of the Foswiki installation.
+# The first parameter will be part of the URL to your installation e.g.
+# http://my.co.uk/foswiki/bin/view/...
+# The second parameter must point to the physical path on your disc.
+
+Alias /server/configure "%CORE%/bin/configure"
+Alias /bin "%CORE%/bin/virtualhosts.fcgi"
+
+# The following Alias is used to access files in the pub directory (attachments etc)
+# It must come _after_ the ScriptAlias.
+# If short URLs are enabled, and any other local directories or files need to be accessed directly, they
+# must also be specified in an Alias statement, and must not conflict with a web name.
+
+Alias /pub %VHOST%/%VIRTUALHOST%/pub
+Alias /robots.txt "%CORE%/robots.txt"
+
+#  Rewriting is required for Short URLs, and Attachment redirecting to viewfile
+RewriteEngine    on
+#RewriteLog "/var/log/apache/rewrite.log"
+#RewriteLogLevel 0
+
+# short urls
+Alias / "%CORE%/bin/virtualhosts.fcgi/"
+RewriteRule ^/+bin/+view/+(.*) /$1 [L,NE,R]
+RewriteRule ^/+bin/+view$ / [L,NE,R]
+
+#
+# Dont rewrite any other /bin URLs
+#
+RewriteRule ^/bin/(.*)$ - [L,PT]                     #  bin, stop rewriting
+
+#
+# Dont rewrite internal requests or robots.txt
+#
+RewriteCond %{IS_SUBREQ} ^true$ [OR]
+RewriteCond %{REQUEST_URI} ^/robots.txt$
+RewriteRule .* - [L]
+
+#
+#  Protect attachments by rewriting to the "viewfile" script
+#
+
+#  Permit some safe exceptions to avoid viewfile overhead
+#  Any gif/jpg/ico in /pub, and any files in /pub/System or any WebPreferences:
+#  pass through unmodified
+RewriteCond  %{REQUEST_URI} ^/pub/[^/]+\.(gif|jpe?g|ico)$  [NC,OR]
+RewriteCond  %{REQUEST_URI} ^/pub/System/(.*)$  [OR]
+RewriteCond  %{REQUEST_URI} ^/pub/([^/]+/)+WebPreferences/([^/]+)$
+RewriteRule  ^/pub/.* - [L,PT]
+
+# Optional - do not rewrite /pub/images if ImageGalleryPlugin is installed - path is incompatible with viewfile
+#RewriteRule ^/+pub/+images/+.*$ - [L,PT]
+
+# If it makes it here, rewrite as viewfile
+RewriteRule ^/+pub/+(.*)$  /bin/viewfile/$1 [L,PT]
+
+# This enables access to the documents in the Foswiki root directory
+<Directory "%VHOST%/%VIRTUALHOST%">
+    Order Allow,Deny
+    Allow from all
+    Deny from env=blockAccess
+</Directory>
+
+<IfModule mod_fcgid.c>
+    DefaultMaxClassProcessCount 3
+
+    FcgidMaxRequestLen 104857600
+    # Refer to details at http://fastcgi.coremail.cn/doc.htm
+</IfModule>
+
+# This specifies the options on the Foswiki scripts directory. The ExecCGI
+# and SetHandler tell apache that it contains scripts. "Allow from all"
+# lets any IP address access this URL.
+# Note:  If you use SELinux, you also have to "Allow httpd cgi support" in your SELinux policies
+
+<Directory "%CORE%/bin">
+    AllowOverride None
+    Order Allow,Deny
+    Allow from all
+    Deny from env=blockAccess
+
+    Options +ExecCGI  -FollowSymLinks
+    SetHandler cgi-script
+    <Files "virtualhosts.fcgi">
+        SetHandler fcgid-script
+    </Files>
+
+    # Password file for Foswiki users
+    AuthUserFile "%VHOST%/%VIRTUALHOST%/data/.htpasswd"
+    AuthName 'Enter your WikiName: (First name and last name, no space, no dots, capitalized, e.g. JohnSmith). Cancel to register if you do not have one.'
+    AuthType Basic
+
+</Directory>
+
+# This sets the options on the pub directory, which contains attachments and
+# other files like CSS stylesheets and icons. AllowOverride None stops a
+# user installing a .htaccess file that overrides these options.
+# Note that files in pub are *not* protected by Foswiki Access Controls,
+# so if you want to control access to files attached to topics you need to
+# block access to the specific directories same way as the ApacheConfigGenerator
+# blocks access to the pub directory of the Trash web
+<Directory "%VHOST%/%VIRTUALHOST%/pub">
+    Options None
+    Options +FollowSymLinks
+    AllowOverride None
+    Order Allow,Deny
+    Allow from all
+    Deny from env=blockAccess
+    ErrorDocument 404 /bin/viewfile
+
+   # This line will redefine the mime type for the most common types of scripts
+    AddType text/plain .shtml .php .php3 .phtml .phtm .pl .py .cgi
+   #
+   # add an Expires header that is sufficiently in the future that the browser does not even ask if its uptodate
+   # reducing the load on the server significantly
+   # IF you can, you should enable this - it _will_ improve your Foswiki experience, even if you set it to under one day.
+   # you may need to enable expires_module in your main apache config
+   #LoadModule expires_module libexec/httpd/mod_expires.so
+   #AddModule mod_expires.c
+   <ifmodule mod_expires.c>
+     <filesmatch "\.(jpe?g|gif|png|css(\.gz)?|js(\.gz)?|ico)$">
+          ExpiresActive on
+          ExpiresDefault "access plus 11 days"
+      </filesmatch>
+   </ifmodule>
+   #
+   # Serve pre-compressed versions of .js and .css files, if they exist
+   # Some browsers do not handle this correctly, which is why it is disabled by default
+    <FilesMatch "\.(js|css)$">
+            RewriteEngine on
+            RewriteCond %{HTTP:Accept-encoding} gzip
+            RewriteCond %{REQUEST_FILENAME}.gz -f
+            RewriteRule ^(.*)$ %{REQUEST_URI}.gz [L,QSA]
+    </FilesMatch>
+    <FilesMatch "\.(js|css)\?.*$">
+            RewriteEngine on
+            RewriteCond %{HTTP:Accept-encoding} gzip
+            RewriteCond %{REQUEST_FILENAME}.gz -f
+            RewriteRule ^([^?]*)\?(.*)$ $1.gz?$2 [L]
+    </FilesMatch>
+    <FilesMatch "\.js\.gz(\?.*)?$">
+            AddEncoding x-gzip .gz
+            AddType application/x-javascript .gz
+    </FilesMatch>
+    <FilesMatch "\.css\.gz(\?.*)?$">
+            AddEncoding x-gzip .gz
+            AddType text/css .gz
+    </FilesMatch>
+
+</Directory>
+
+# Security note: All other directories should be set so
+# that they are *not* visible as URLs, so we set them as =deny from all=.
+<Directory "%VHOST%/%VIRTUALHOST%/data">
+    deny from all
+</Directory>
+
+<Directory "%VHOST%/%VIRTUALHOST%/templates">
+    deny from all
+</Directory>
+
+<Directory "%VHOST%/%VIRTUALHOST%/lib">
+    deny from all
+</Directory>
+
+<Directory "%VHOST%/%VIRTUALHOST%/locale">
+    deny from all
+</Directory>
+
+<Directory "%VHOST%/%VIRTUALHOST%/tools">
+    deny from all
+</Directory>
+
+<Directory "%VHOST%/%VIRTUALHOST%/working">
+    deny from all
+</Directory>
+
+# We set an environment variable called blockAccess.
+#
+# Setting a BrowserMatchNoCase to ^$ is important. It prevents Foswiki from
+# including its own topics as URLs and also prevents other Foswikis from
+# doing the same. This is important to prevent the most obvious
+# Denial of Service attacks.
+#
+# You can expand this by adding more BrowserMatchNoCase statements to
+# block evil browser agents trying to crawl your Foswiki
+#
+# Example:
+# BrowserMatchNoCase ^SiteSucker blockAccess
+# BrowserMatchNoCase ^$ blockAccess
+
+BrowserMatchNoCase ^$ blockAccess
+
+</VirtualHost>
+
+

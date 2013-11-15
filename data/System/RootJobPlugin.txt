@@ -1,0 +1,60 @@
+%META:TOPICPARENT{name="Plugins"}%
+<!--
+One line description, required for extensions repository catalog.
+   * Set SHORTDESCRIPTION = Create virtual hosts using VirtualHostingContrib.
+-->
+---+!! RootJobPlugin
+
+%SHORTDESCRIPTION%
+
+Standard controls in [[System.RootJobPluginControls]].
+
+| format | | format="&#124; $formname &#124; $form &#124;" |
+| check | | check="regex" message="Expanation" |
+
+| *Special options* | *remark* | *example* |
+| {vhosts} | expands to a list of installed virtual hosts. | &#124; choose wiki &#124; $radio options="{vhosts}" &#124;%BR%&#124; Wikis &#124; $label options="{vhosts display='&lt;a href=$quothttp://$vhost$quot&gt;$vhost&lt;/a&gt;' seperator='&lt;br /&gt;'}" &#124; |
+| {'example'} | Select-value pair for checkboxes/radio-buttons/select | {'example' display='This is an example'}%BR%&#124; example &#124; $radio options="{'1' display='example nr. 1' selected='1'},{'2' display='example nr. 2'}" &#124; |
+| $dollar | expands to a dollar-sign $ | |
+| $quot | expands to a quotation "| |
+| $n | expands to a newline | |
+| &amp;#124; | expands to a vertical bar &#124; | |
+| $oc; | expands to an opening curly bracket { | |
+| $cc; | expands to a closing culry bracket } | |
+
+Special tokens for format only:
+| *token* | *Expands to* |
+| $fieldname | Name of the field |
+| $form | The generated form for this field |
+| $job | ID of the job |
+
+| *type* | *remark* | *options* | *example* |
+| $label | Just for display | Text | &#124; desc &#124; $label options="This is an example" &#124; |
+| $text | Textbox | length | &#124; wname &#124; $text options="20" check="^[a-z]+$" message="Please use lowercase letters" &#124; |
+| $checkbox | Checkbox | Available boxes, comma-seperated; checked: marks initially checked boxes; display: text for checkbox | &#124; colors &#124; $checkbox options="black, $checked: white, $checked: #abc $display: corporate" &#124; |
+| $radio | Radio selector | Available dials, comma-seperated; checked: marks preselected dial; display: text for dial | &#124; color &#124; $radio options="black, $checked white, #abc $display: corporate" &#124; |
+| $select | Select form | Available selections, comma-seperated; checked: marks preselected value; display: text for value | &#124; color &#124; $select options="black, $checked white, #abc $display: corporate" &#124; |
+| $combine | Values of previous fields will be expanded here as text.%BR%This is for merging multiple fields into one.%BR%Will not show in the rendered form. | | &#124; subhost &#124; $text options="20" &#124;%BR%&#124; domain &#124; $select options="myserver.de, myserver.com" &#124;%BR%&#124; wname &#124; $combine options="$subhost.$domain" &#124; |
+| $wiki | Like combine, but will also expand tml.%BR%Will first expand fields and then tml. | | |
+| $extern | | | |
+
+| *special field* | *remark* | *options* | *example* |
+| command | id for job | id | &#124; command &#124; ping &#124; |
+| allowed | Who is allowed to execute this job | names and groups, comma seperated | &#124; allowed &#124; AdminUser, KeyUserGroup &#124; |
+| submit | Submit-button for the form | Text in button | &#124; submit &#124; options="Do it!" &#124; |
+
+---++ Installation
+%$INSTALL_INSTRUCTIONS%
+
+---++ Info
+
+|  Author: | StephanOsthold |
+|  Copyright: | &copy; 2011, Foswiki Contributors |
+|  License: | GPL ([[http://www.gnu.org/copyleft/gpl.html][GNU General Public License]]) |
+|  Release: | %$RELEASE% |
+|  Version: | %$VERSION% |
+|  Change&nbsp;History: | <!-- versions below in reverse order -->&nbsp; |
+|  1.0.0 (XX Mmm 20XX): | Initial version |
+|  Home: | http://foswiki.org/Extensions/%TOPIC% |
+|  Support: | http://foswiki.org/Support/%TOPIC% |
+
