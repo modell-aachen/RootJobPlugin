@@ -82,7 +82,7 @@ sub WikiCommand {
 
     my $webtopic = "$jweb.$jtopic";
     my $allowed = $Foswiki::cfg{Extensions}{RootJobPlugin}{Jobs} || '';
-    return "Not in allowed list: $webtopic" unless $allowed =~ m/(?:^|,)\s*$webtopic\s*(?:$|,)/; # XXX Message, Maketext
+    return "Not in allowed list: $webtopic" unless $allowed =~ m/(?:^|,)\s*\Q$webtopic\E\s*(?:$|,)/; # XXX Message, Maketext
 
     $jobs->{$webtopic} = _parseJobTopic($jweb, $jtopic) unless $jobs->{$webtopic};
     my $details = $jobs->{$webtopic}->{$job};
@@ -294,7 +294,7 @@ sub _RootJob {
 
     my $webtopic = "$jweb.$jtopic";
     my $allowed = $Foswiki::cfg{Extensions}{RootJobPlugin}{Jobs} || '';
-    return "Topic $jweb.$jtopic not in list of allowed job-topics!" unless $allowed =~ m/(?:^|,)\s*$webtopic\s*(?:$|,)/; # XXX Message, Maketext, oops
+    return "Topic $jweb.$jtopic not in list of allowed job-topics!" unless $allowed =~ m/(?:^|,)\s*\Q$webtopic\E\s*(?:$|,)/; # XXX Message, Maketext, oops
 
     our $jobs;
     $jobs->{$webtopic} = _parseJobTopic($jweb, $jtopic) unless $jobs->{$webtopic};
@@ -427,7 +427,7 @@ sub _listHosts {
 
     my $exceptregex;
     if ($options->{except}) {
-        $exceptregex = qr/$options->{except}[0]/;
+        $exceptregex = qr/$options->{except}[0]/; # _listHosts should only be used on trusted topics, so regex should be ok
     }
     my $seperator = ', ';
     if ($options->{seperator}) {
