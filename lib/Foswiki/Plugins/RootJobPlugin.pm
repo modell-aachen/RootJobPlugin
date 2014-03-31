@@ -16,9 +16,9 @@ use warnings;
 use Foswiki::Func    ();    # The plugins API
 use Foswiki::Plugins ();    # For the API version
 
-our $VERSION = '$Rev: 20120217 (2012-02-17) $';
+our $RELEASE = "1.1";
 
-our $RELEASE = "1.0";
+our $RELEASE = "1.1";
 
 our $SHORTDESCRIPTION = 'Manage your server with a frontend in your wiki.';
 
