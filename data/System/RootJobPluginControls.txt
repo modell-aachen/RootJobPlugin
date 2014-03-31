@@ -1,51 +1,12 @@
 %META:TOPICPARENT{name="Plugins"}%
 
----++ create new Wiki
-Please enter the name of the wiki (full host name) and press the shiny button.<br />
-<form name="RootJob" action="%SCRIPTURLPATH{"rest"}%/RootJobPlugin/WikiCommand?">
-Template: %IF{"defined WIKITEMPLATES" then="<select name='template'>$percentFORMATLIST{$quot$percentWIKITEMPLATES$percent$quot format=$quot<option>$1</option>$quot}$percent</select>" else="<em>_template</em>"}%<br />
-  <input type="text" name="wname" value="Wiki Name" />
-  <input type="hidden" name="command" value="CreateWiki" />
-  %BUTTON{"Create Wiki!" type="submit"}%%CLEAR%
-</form>
+---++ Allgemeine administrative Aufgaben
+%ROOTJOB{"ReindexSolr" web="%SYSTEMWEB%" topic="RootJobDefaultCommands"}%
+%ROOTJOB{"RestartService" web="%SYSTEMWEB%" topic="RootJobDefaultCommands"}%
+%ROOTJOB{"DeleteWiki" web="%SYSTEMWEB%" topic="RootJobDefaultCommands"}%
+%ROOTJOB{"CreateWiki" web="%SYSTEMWEB%" topic="RootJobDefaultCommands"}%
+%ROOTJOB{"MarkWiki" web="%SYSTEMWEB%" topic="RootJobDefaultCommands"}%
 
----+++ Reconfigure
-Recreate all configurations managed by this plugin.<br />
-<form name="RootJob" action="%SCRIPTURLPATH{"rest"}%/RootJobPlugin/WikiCommand?">
-  <input type="hidden" name="command" value="ReconfigureAll" />
-  <input type="hidden" name="wname" value="all" />
-  %BUTTON{"Configure him!" type="submit"}%%CLEAR%
-</form>
-
----+++ Delete this Wiki
-<form name="RootJob" action="%SCRIPTURLPATH{"rest"}%/RootJobPlugin/WikiCommand?">
-  <input type="hidden" name="command" value="DeleteWiki" />
-  <input type="hidden" name="wname" value="%HTTP_HOST%" />
-  <span style="display: none">%BUTTON{"HarakiriSubmit" id="RootJobPluginHarakiri" type="submit"}%</span>
-  %BUTTON{"Harakiri!" onclick="if(confirm('Are you sure you want to DELETE %HTTP_HOST%?!?')) {$('#RootJobPluginHarakiri').click();}"}%%CLEAR%
-</form>
-
----+++ Reindex this Wiki
-Make a full index for this wiki (%HTTP_HOST%).<br />
-<form name="RootJob" action="%SCRIPTURLPATH{"rest"}%/RootJobPlugin/WikiCommand?">
-  <input type="hidden" name="command" value="ReindexWiki" />
-  <input type="hidden" name="wname" value="%HTTP_HOST%" />
-  %BUTTON{value="Index Me!" type="submit"}%%CLEAR%
-</form>
-
----+++ Reindex all Wikis
-Make a full index for wikis on this server.<br />
-<form name="RootJob" action="%SCRIPTURLPATH{"rest"}%/RootJobPlugin/WikiCommand?">
-  <input type="hidden" name="command" value="ReindexWiki" />
-  <input type="hidden" name="wname" value="all" />
-  %BUTTON{"Index ALL!" type="submit"}%%CLEAR%
-</form>
-
----++ Ping
-Issue a command just to see if this plugin is alive.<br />
-<form name="RootJob" action="%SCRIPTURLPATH{"rest"}%/RootJobPlugin/WikiCommand?">
-  <input type="hidden" name="command" value="Ping" />
-  <input type="hidden" name="wname" value="me" />
-  %BUTTON{"Ping!" type="submit"}%%CLEAR%
-</form>
+---++ Internes
+%ROOTJOB{"Ping" web="%SYSTEMWEB%" topic="RootJobDefaultCommands"}%
 
