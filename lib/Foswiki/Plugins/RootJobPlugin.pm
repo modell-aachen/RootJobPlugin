@@ -18,7 +18,7 @@ use Foswiki::Plugins ();    # For the API version
 
 our $RELEASE = "1.1";
 
-our $RELEASE = "1.1";
+our $VERSION = "1.1";
 
 our $SHORTDESCRIPTION = 'Manage your server with a frontend in your wiki.';
 
