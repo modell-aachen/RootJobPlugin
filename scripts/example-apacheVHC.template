@@ -100,6 +100,14 @@ RewriteRule ^/+pub/+(.*)$  /bin/viewfile/$1 [L,PT]
     AuthName 'Enter your WikiName: (First name and last name, no space, no dots, capitalized, e.g. JohnSmith). Cancel to register if you do not have one.'
     AuthType Basic
 
+    <FilesMatch "^(configure)$">
+        AuthUserFile "%CORE%/data/.htpasswd"
+        SetHandler cgi-script
+        Require user admin
+        Satisfy All
+        ErrorDocument 401 default
+    </FilesMatch>
+
 </Directory>
 
 # This sets the options on the pub directory, which contains attachments and
