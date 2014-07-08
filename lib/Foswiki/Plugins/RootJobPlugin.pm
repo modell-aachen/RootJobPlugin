@@ -444,7 +444,8 @@ sub _listHosts {
         Foswiki::Func::writeWarning("Could not open VirtualHostsDir $vhdir!");
         return '';
     }
-    while (my $file = readdir(DIR)) {
+    my @files = sort readdir(DIR);
+    while (my $file = shift @files) {
         next if $file =~ m#^(?:\.|_)#;
         next if (defined $exceptregex && $file =~ $exceptregex);
         next unless (-d "$vhdir/$file");
@@ -531,9 +532,9 @@ sub beforeUploadHandler { &$handler; }
 __END__
 Foswiki - The Free and Open Source Wiki, http://foswiki.org/
 
-Author: StephanOsthold
+Author: Modell Aachen GmbH
 
-Copyright (C) 2008-2011 Foswiki Contributors. Foswiki Contributors
+Copyright (C) 2008-2014 Foswiki Contributors. Foswiki Contributors
 are listed in the AUTHORS file in the root of this distribution.
 NOTE: Please extend that file, not this notice.
 
