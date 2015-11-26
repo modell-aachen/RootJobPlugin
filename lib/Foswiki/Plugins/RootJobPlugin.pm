@@ -17,11 +17,9 @@ use Foswiki::Func    ();    # The plugins API
 use Foswiki::Plugins ();    # For the API version
 
 our $RELEASE = "1.1";
-
 our $VERSION = "1.1";
 
 our $SHORTDESCRIPTION = 'Manage your server with a frontend in your wiki.';
-
 our $NO_PREFS_IN_TOPIC = 1;
 
 use constant COMMAND => 0;
@@ -41,7 +39,12 @@ sub initPlugin {
         return 0;
     }
 
-    Foswiki::Func::registerRESTHandler( 'WikiCommand', \&WikiCommand );
+    Foswiki::Func::registerRESTHandler( 'WikiCommand', \&WikiCommand,
+        authenticate => 1,
+        validate => 0,
+        http_allow => 'GET,POST'
+    );
+
     Foswiki::Func::registerTagHandler( 'ROOTJOB', \&_RootJob );
 
     $jobs = {};
