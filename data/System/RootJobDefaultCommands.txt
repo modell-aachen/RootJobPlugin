@@ -5,34 +5,15 @@
 | submit |  |
 
 %EDITTABLE{}%
-| *RootJobPlugin* | *Ping* |
-| command | Ping |
+| *RootJobPlugin* | *ReloadWebServer* |
+| command | vhctools:ReloadWebServer |
 | allowed | admin,AdminUser |
-| label | $label format="&#124; *$job* &#124;&#124;$n" |
-| label | $label format="&#124; This will just leave a mark in the log. &#124;&#124;$n" |
-| message | $text options="20" |
-| submit | options="Ping!" |
-
-%EDITTABLE{}%
-| *RootJobPlugin* | *ReindexSolr* |
-| command | ReindexSolr |
-| allowed | admin,AdminUser |
-| label | $label format="&#124; *Reindex wiki with solr* &#124;&#124;$n" |
-| wname | $radio options="{vhosts format='$co$squot$vhost$squot display=$squot<a href=$quothttp://$vhost$quot>$vhost</a>$squot$cc'}, all" format="&#124; Select Wiki &#124; $form &#124;$n" |
-| MODE | $radio options="{'full' selected='1'}, delta" |
-| submit | options="Reindex..." |
-
-%EDITTABLE{}%
-| *RootJobPlugin* | *RestartService* |
-| command | RestartService |
-| allowed | admin,AdminUser |
-| label | $label format="&#124; *Restart a service on the server* &#124;&#124;$n" |
-| service | $checkbox options="webserver, solr, iwatch, all" format="&#124; Select services &#124; $form &#124;$n" |
+| label | $label format="&#124; *Reload the web server and all wiki configuration/code* &#124;&#124;$n" |
 | submit | options="Issue restart!" |
 
 %EDITTABLE{}%
 | *RootJobPlugin* | *CreateWiki* |
-| command | CreateWiki |
+| command | vhctools:CreateWiki |
 | allowed | admin,AdminUser |
 | label | $label format="&#124; *$job* &#124;&#124;$n" |
 | wname | $text options="20" format="&#124; Hostname: &#124; $form &#124;$n" |
@@ -40,7 +21,7 @@
 
 %EDITTABLE{}%
 | *RootJobPlugin* | *DeleteWiki* |
-| command | DeleteWiki |
+| command | vhctools:DeleteWiki |
 | allowed | admin,AdminUser |
 | label | $label format="&#124; *$job* &#124;&#124;$n" |
 | label | $label format="&#124; Wikis marked as _core_ or _protected_ and template-wikis will not show here. &#124;&#124;$n" |
@@ -48,8 +29,17 @@
 | submit | options="Delete Wiki!" |
 
 %EDITTABLE{}%
+| *RootJobPlugin* | *ResetWiki* |
+| command | vhctools:ResetWiki |
+| allowed | admin,AdminUser |
+| label | $label format="&#124; *$job* &#124;&#124;$n" |
+| label | $label format="&#124; Wikis marked as _core_ or _protected_ and template-wikis will not show here. &#124;&#124;$n" |
+| wname | $radio options="{vhosts unmarker='core' unmarker='template.cfg' unmarker='protected' format='$co$squot$vhost$squot display=$squot<a href=$quothttp://$vhost$quot>$vhost</a>$squot$cc'}" |
+| submit | options="Reset Wiki!" |
+
+%EDITTABLE{}%
 | *RootJobPlugin* | *MarkWiki* |
-| command | MarkWiki |
+| command | vhctools:MarkWiki |
 | allowed | admin,AdminUser |
 | label | $label format="&#124; *Mark wiki as _protected_* &#124;&#124;$n" |
 | label | $label format="&#124; Wikis marked as _protected_ or _core_ cannot be deleted with this plugin. &#124;&#124;$n" |

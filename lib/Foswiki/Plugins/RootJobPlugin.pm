@@ -157,25 +157,17 @@ sub WikiCommand {
         $fields->{$name} = $value;
     }
 
+    my $queue;
+    ($queue, $command) = $command =~ m/(\w+):([\w.-]+)/;
+    unless ($queue && $command) {
+        return "Outdated job definition; job command must now be named like 'queue:command' (where 'queue' is a taskdaemon department name)";
+    }
+
     my $time = time;
     my $localtime = localtime($time);
 
-    my $filename = time."_$command.cmd";
-
-    $filename =~ m#^([a-zA-Z0-9\._.\-]+)$# or return "The command \"$command\" ($filename) may only contain letters and numbers."; # XXX
-    $filename = $1;
-
-    my $cmdDir = $Foswiki::cfg{Extensions}{RootJobPlugin}{cmdDir} || return "Please set cmdDir in configure!";
-
-    # check if already issued
-    if (-e "$cmdDir/$filename") {
-        # XXX count up, or something
-        return "The command has already been issued, please try again.";
-    }
-
-    open (my $wfile, ">", "$cmdDir/$filename") || return "Error while creating file $cmdDir/$filename, please check your configuration.";
-    print $wfile "Command '$command' issued by $username at $localtime.\n   * command=$command\n   * user=$username\n   * localtime=$localtime\n   * time=$time$out\n" || return "Error while writing to $cmdDir/$command.";
-    return "Command $command issued ($filename)"; 
+    Foswiki::Plugins::TaskDaemonPlugin::send($fields, $command, $queue);
+    return "Command $command sent.";
 }
 
 sub _replaceWithFields {

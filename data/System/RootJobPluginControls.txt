@@ -1,12 +1,9 @@
 %META:TOPICPARENT{name="Plugins"}%
 
----++ Allgemeine administrative Aufgaben
-%ROOTJOB{"ReindexSolr" web="%SYSTEMWEB%" topic="RootJobDefaultCommands"}%
-%ROOTJOB{"RestartService" web="%SYSTEMWEB%" topic="RootJobDefaultCommands"}%
+---++ Administrative tasks
+%ROOTJOB{"ReloadWebServer" web="%SYSTEMWEB%" topic="RootJobDefaultCommands"}%
+%ROOTJOB{"ResetWiki" web="%SYSTEMWEB%" topic="RootJobDefaultCommands"}%
 %ROOTJOB{"DeleteWiki" web="%SYSTEMWEB%" topic="RootJobDefaultCommands"}%
 %ROOTJOB{"CreateWiki" web="%SYSTEMWEB%" topic="RootJobDefaultCommands"}%
 %ROOTJOB{"MarkWiki" web="%SYSTEMWEB%" topic="RootJobDefaultCommands"}%
-
----++ Internes
-%ROOTJOB{"Ping" web="%SYSTEMWEB%" topic="RootJobDefaultCommands"}%
 
