@@ -3,3 +3,5 @@ data/System/RootJobPlugin.txt 0644
 data/System/RootJobPluginControls.txt 0644
 lib/Foswiki/Plugins/RootJobPlugin.pm 0644
 lib/Foswiki/Plugins/RootJobPlugin/Config.spec 0644
+pub/System/RootJobPlugin/rootjob.js 0644
+pub/System/RootJobPlugin/rootjob_src.js 0644

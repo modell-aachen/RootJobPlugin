@@ -396,6 +396,9 @@ FIELDS
         $fields = "\n<form name='$job' action='%SCRIPTURLPATH{\"rest\"}%/RootJobPlugin/WikiCommand' method='post' class='RootJobPluginForm'>\n$fields</form>";
     }
 
+    Foswiki::Func::addToZone('script', 'ROOTJOB_JS', "<script type=\"text/javascript\" src=\"%PUBURLPATH%/%SYSTEMWEB%/RootJobPlugin/rootjob.js\"></script>",
+        'JQUERYPLUGIN::BLOCKUI');
+
     return $fields;
 }
 
